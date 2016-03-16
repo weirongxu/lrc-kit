@@ -38,7 +38,7 @@ lrc.toString()
 ### API
 
 **Lrc.parse(text)**: 
-parse and return a lrc Object
+parse lyirc text and return a lrc object
 
 **Lrc object**
 
@@ -58,7 +58,7 @@ parse and return a lrc Object
 }
 ```
 
-- **lrc.lyric**
+- **lrc.lyrics**
     lyric array
 ```
 [
@@ -72,6 +72,9 @@ parse and return a lrc Object
     },
 ]
 ```
+
+- **lrc.toString()**
+    generate lyric string
 
 ## Runner
 
