@@ -1,0 +1,31 @@
+{
+  "name": "lrc-kit",
+  "version": "0.0.2",
+  "description": "lrc parser, maker, runner",
+  "main": "lib/lrc-kit.js",
+  "scripts": {
+    "build": "rm -rf lib && babel --out-dir lib src",
+    "dev": "mocha --watch",
+    "test": "npm run lint && npm run unit",
+    "unit": "mocha",
+    "lint": "eslint src/**/*.js",
+    "prepublish": "npm test && npm run build"
+  },
+  "author": "Weirong Xu <weirongxu.raidou@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-eslint": "^5.0.0-beta10",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "babel-register": "^6.5.2",
+    "eslint": "^2.0.0",
+    "estraverse-fb": "^1.3.1",
+    "mocha": "^2.4.5",
+    "should": "^8.2.1"
+  },
+  "dependencies": {
+    "clone": "^1.0.2",
+    "is_js": "^0.8.0"
+  }
+}
