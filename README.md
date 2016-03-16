@@ -44,34 +44,34 @@ parse and return a lrc Object
 
  - **lrc.info**
     lyric info plain object  
-    ```
-    {
-        'ar': 'Lyrics artist',
-        'al': 'Album where the song is from',
-        'ti': 'Lyrics (song) title',
-        'au': 'Creator of the Songtext',
-        'length': 'music length2:50',
-        'by': 'Creator of the LRC file',
-        'offset': '+/- Overall timestamp adjustment in milliseconds, + shifts time up, - shifts down',
-        're': 'The player or editor that created the LRC file',
-        've': 'version of program',
-    }
-    ```
+```
+{
+    'ar': 'Lyrics artist',
+    'al': 'Album where the song is from',
+    'ti': 'Lyrics (song) title',
+    'au': 'Creator of the Songtext',
+    'length': 'music length2:50',
+    'by': 'Creator of the LRC file',
+    'offset': '+/- Overall timestamp adjustment in milliseconds, + shifts time up, - shifts down',
+    're': 'The player or editor that created the LRC file',
+    've': 'version of program',
+}
+```
 
 - **lrc.lyric**
     lyric array
-    ```
-    [
-        {
-            content: "i guess you're my creep tonight",
-            timestamp: 9.01,
-        },
-        {
-            content: "The way you knock me off my feet",
-            timestamp: 12.08,
-        },
-    ]
-    ```
+```
+[
+    {
+        content: "i guess you're my creep tonight",
+        timestamp: 9.01,
+    },
+    {
+        content: "The way you knock me off my feet",
+        timestamp: 12.08,
+    },
+]
+```
 
 ## Runner
 
