@@ -1,4 +1,4 @@
-# lrc kit
+# lrc kit [![CircleCI branch](https://img.shields.io/circleci/project/weirongxu/lrc-kit/master.svg)](https://circleci.com/gh/weirongxu/lrc-kit)
 lrc parser and runner
 
 ## Install
