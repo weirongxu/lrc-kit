@@ -1,13 +1,13 @@
 {
   "name": "lrc-kit",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "lrc parser, maker, runner",
   "main": "lib/lrc-kit.js",
   "scripts": {
     "build": "rm -rf lib && babel --out-dir lib src",
-    "dev": "mocha --compilers js:babel-register --watch",
+    "dev": "mocha --watch",
     "test": "npm run lint && npm run unit",
-    "unit": "mocha --compilers js:babel-register",
+    "unit": "mocha",
     "lint": "eslint src/**/*.js",
     "prepublish": "npm test && npm run build"
   },

@@ -30,7 +30,7 @@ export default class Runner {
     if ('offset' in this.lrc.info) {
       var offset = parseInt(this.lrc.info.offset) / 1000;
       if (! isNaN(offset)) {
-        this.getLyrics().forEach((lyric) => {
+        this.lrc.lyrics.forEach((lyric) => {
           lyric.timestamp += offset;
           if (lyric.timestamp < 0) {
             lyric.timestamp = 0;
@@ -42,30 +42,27 @@ export default class Runner {
   }
 
   _sort() {
-    this.getLyrics().sort((a, b) => a.timestamp - b.timestamp);
+    this.lrc.lyrics.sort((a, b) => a.timestamp - b.timestamp);
   }
 
   /**
    *  @param {number} timestamp
    */
   timeUpdate(timestamp) {
-    this._currentIndex = this._findIndex(timestamp);
+    if (this._currentIndex >= this.lrc.lyrics.length) {
+      this._currentIndex = this.lrc.lyrics.length - 1;
+    } else if (this._currentIndex < -1) {
+      this._currentIndex = -1;
+    }
+    this._currentIndex = this._findIndex(timestamp, this._currentIndex);
   }
 
-  _findIndex(timestamp, startIndex=this.curIndex()) {
-    var curFrontTimestamp, curBackTimestamp;
+  _findIndex(timestamp, startIndex) {
+    var curFrontTimestamp = startIndex == -1 ?
+      Number.NEGATIVE_INFINITY : this.lrc.lyrics[startIndex].timestamp;
 
-    if (startIndex <= -1) {
-      curFrontTimestamp = Number.NEGATIVE_INFINITY;
-    } else {
-      curFrontTimestamp = this.getLyrics()[startIndex].timestamp;
-    }
-
-    if (startIndex >= this.getLyrics().length - 1) {
-      curBackTimestamp = Number.POSITIVE_INFINITY;
-    } else {
-      curBackTimestamp = this.getLyrics()[startIndex+1].timestamp;
-    }
+    var curBackTimestamp = (startIndex == this.lrc.lyrics.length - 1) ?
+      Number.POSITIVE_INFINITY : this.lrc.lyrics[startIndex+1].timestamp;
 
     if (timestamp < curFrontTimestamp) {
       return this._findIndex(timestamp, startIndex-1);
@@ -77,9 +74,9 @@ export default class Runner {
       }
     } else if (timestamp > curBackTimestamp) {
       return this._findIndex(timestamp, startIndex+1);
+    } else {
+      return startIndex;
     }
-
-    return startIndex;
   }
 
   getInfo() {
@@ -94,8 +91,8 @@ export default class Runner {
    *  @return {Object} {''}
    */
   getLyric(index = this.curIndex()) {
-    if (index >= 0 && index <= this.getLyrics().length - 1) {
-      return this.getLyrics()[index];
+    if (index >= 0 && index <= this.lrc.lyrics.length - 1) {
+      return this.lrc.lyrics[index];
     } else {
       throw new Error('Index not exist');
     }
