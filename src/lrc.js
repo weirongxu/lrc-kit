@@ -75,10 +75,10 @@ export default class Lrc {
     for (let key in this.info) {
       lines.push(`[${key}:${this.info[key]}]`);
     }
-    for (let lyric of this.lyrics) {
+    this.lyrics.forEach((lyric) => {
       lines.push(
-          `[${Lrc.createTimestamp(lyric.timestamp)}]${lyric.content || ''}`);
-    }
+        `[${Lrc.createTimestamp(lyric.timestamp)}]${lyric.content || ''}`);
+    });
     return lines.join(lineFormat);
   }
 }

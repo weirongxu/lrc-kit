@@ -1,14 +1,14 @@
 var fs = require('fs');
 var fixtures = {};
 [
-'main.lrc'
+  'main.lrc'
 ].forEach((name) => {
   fixtures[name] = fs.readFileSync(__dirname + '/fixtures/' + name, 'utf-8');
 });
 
-import {Lrc, Runner, LineParser} from '../src/lrc-kit';
+var lrcKit = require('../src/lrc-kit');
 
-var context = {Lrc, Runner, LineParser, fixtures};
+var context =  {...lrcKit, fixtures};
 
 function load_specs(path) {
   require(path)(context);
