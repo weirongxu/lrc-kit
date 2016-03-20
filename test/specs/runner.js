@@ -21,7 +21,7 @@ module.exports = function(cnx){
   });
 
   describe('get lyric', function(){
-    beforeEach(function() {
+    before(function() {
       runner = new Runner(lrc);
     });
 

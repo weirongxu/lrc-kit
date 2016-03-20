@@ -1,4 +1,4 @@
-# lrc kit [![CircleCI branch](https://img.shields.io/circleci/project/weirongxu/lrc-kit/master.svg)](https://circleci.com/gh/weirongxu/lrc-kit)
+# lrc kit [![Build Status](https://img.shields.io/circleci/project/weirongxu/lrc-kit/master.svg)](https://circleci.com/gh/weirongxu/lrc-kit)
 lrc parser and runner
 
 ## Install
@@ -9,30 +9,46 @@ npm i -S lrc-kit
 ## Lrc
 
 ### Usage
+import
+```javascript
+// ES5
+var Lrc = require('lrc-kit').Lrc
+// ES6
+import {Lrc} from 'lrc-kit'
+```
+
 parse lyric
 ```javascript
-// es5
-var Lrc = require('lrc-kit').Lrc;
-// es6
-import {Lrc} from 'lrc-kit';
-
-var lrc = Lrc.parse('[ar:Lyrics artist]\n[00:09.010]i guess you\'re my creep tonight');
+var lrc = Lrc.parse(`
+  [ar:Lyrics artist]
+  [00:09.010]i guess you're my creep tonight
+`)
 lrc.info
 // {'ar': 'Lyrics artist'}
 lrc.lyrics
-// [{content: "i guess you're my creep tonight", timestamp: 9.01}]
+// [{
+//   content: "i guess you're my creep tonight",
+//   timestamp: 9.01
+// }]
 ```
 
 make lyric
 ```javascript
-var lrc = new Lrc();
+var lrc = new Lrc()
 lrc.info['ar'] = 'Lyrics artist';
 lrc.lyrics.push({
     content: "i guess you're my creep tonight",
     timestamp: 9.01,
-});
+})
+
 lrc.toString()
-// [ar:Lyrics artist]\r\n[00:09.010]i guess you\'re my creep tonight
+// [ar:Lyrics artist]
+// [00:09.010]i guess you're my creep tonight
+
+lrc.offset(-3)
+lrc.toString()
+// [ar:Lyrics artist]
+// [00:09.010]i guess you're my creep tonight
 ```
 
 ### API
@@ -73,34 +89,45 @@ parse lyirc text and return a lrc object
 ]
 ```
 
+- **lrc.offset(offset)**
+    offset all lyrics
+
 - **lrc.toString()**
     generate lyric string
 
 ## Runner
 
 ### Usage
+import
 ```javascript
-// es5
-var Runner = require('lrc-kit').Runner;
-// es6
-import {Runner} from 'lrc-kit';
+// ES5
+var Runner = require('lrc-kit').Runner
+// ES6
+import {Runner} from 'lrc-kit'
+```
 
-var runner = Runner(Lrc.parse());
+run
+```javascript
+var runner = Runner(Lrc.parse(...))
+
 audio.addEventListener('timeupdate', () => {
     runner.updateTime(audio.currentTime)
-    var lyric = runner.curLyric();
+    var lyric = runner.curLyric()
     // or
-    var lyric = runner.getLyric(runner.curIndex());
+    var lyric = runner.getLyric(runner.curIndex())
     lyric
-    // {content: "i guess you're my creep tonight", timestamp: 9.01}
-});
+    // {
+    //    content: "i guess you're my creep tonight",
+    //    timestamp: 9.01
+    // }
+})
 
+// Modify lyric
 runner.lrc.lyrics.push({
     content: "Now i can't tell my left form right",
     timestamp: 17.3,
-});
-// must call lrcUpdate() when update lyrics
-runner.lrcUpdate();
+})
+runner.lrcUpdate() // Must call lrcUpdate() when update lyrics
 ```
 
 ### API

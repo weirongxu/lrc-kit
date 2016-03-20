@@ -30,12 +30,7 @@ export default class Runner {
     if ('offset' in this.lrc.info) {
       var offset = parseInt(this.lrc.info.offset) / 1000;
       if (! isNaN(offset)) {
-        this.lrc.lyrics.forEach((lyric) => {
-          lyric.timestamp += offset;
-          if (lyric.timestamp < 0) {
-            lyric.timestamp = 0;
-          }
-        });
+        this.lrc.offset(offset);
         delete this.lrc.info.offset;
       }
     }

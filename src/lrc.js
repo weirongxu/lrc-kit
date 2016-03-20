@@ -65,6 +65,15 @@ export default class Lrc {
     return `${this.padZero(parseInt(timestamp / 60))}:${this.padZero((timestamp % 60).toFixed(2))}`;
   }
 
+  offset(offsetTime) {
+    this.lyrics.forEach((lyric) => {
+      lyric.timestamp += offsetTime;
+      if (lyric.timestamp < 0) {
+        lyric.timestamp = 0;
+      }
+    });
+  }
+
   /**
    * get lrc text
    * @param {string} [lineFormat=\r\n]
