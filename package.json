@@ -8,7 +8,7 @@
     "dev": "mocha --watch",
     "test": "npm run lint && npm run unit",
     "unit": "mocha",
-    "lint": "eslint src/**/*.js",
+    "lint": "eslint src",
     "prepublish": "npm test && npm run build"
   },
   "author": "Weirong Xu <weirongxu.raidou@gmail.com>",

@@ -1,10 +1,10 @@
 module.exports = function(cnx){
-  var LineParser = cnx.LineParser;
+  var LineParser = cnx.LineParser
 
   describe('INFO TYPE', function(){
     it('get info type', function(){
-      var lp = new LineParser('[ti: Song title]');
-      lp.type.should.equal(LineParser.TYPE.INFO);
+      var lp = new LineParser('[ti: Song title]')
+      lp.type.should.equal(LineParser.TYPE.INFO)
     });
     [
       [
@@ -19,19 +19,19 @@ module.exports = function(cnx){
         'test',
         'raidou',
       ],
-    ]
-    .forEach(function(fixture){
+    ].forEach(function(fixture){
       it(fixture[0], function(){
-        var lp = new LineParser(fixture[1]);
-        lp.key.should.equal(fixture[2]);
-        lp.value.should.equal(fixture[3]);
-      });
-    });
-  });
+        var lp = new LineParser(fixture[1])
+        lp.key.should.equal(fixture[2])
+        lp.value.should.equal(fixture[3])
+      })
+    })
+  })
+
   describe('TIME TYPE', function(){
     it('get time type', function(){
-      var lp = new LineParser('[10:10.10]hello');
-      lp.type.should.equal(LineParser.TYPE.TIME);
+      var lp = new LineParser('[10:10.10]hello')
+      lp.type.should.equal(LineParser.TYPE.TIME)
     });
     [
       [
@@ -70,26 +70,25 @@ module.exports = function(cnx){
         1*60,
         'hello',
       ],
-    ]
-    .forEach(function(fixture){
+    ].forEach(function(fixture){
       it(fixture[0], function(){
-        var lp = new LineParser(fixture[1]);
-        lp.timestamp.should.equal(fixture[2]);
-        lp.content.should.equal(fixture[3]);
-      });
-    });
-  });
+        var lp = new LineParser(fixture[1])
+        lp.timestamp.should.equal(fixture[2])
+        lp.content.should.equal(fixture[3])
+      })
+    })
+  })
+
   describe('INVALID TYPE', function(){
     it('get invalid type', function(){
       [
         '',
         'test',
         '[:]',
-      ]
-      .forEach(function(fixture) {
-        var lp = new LineParser(fixture);
-        lp.type.should.equal(LineParser.TYPE.INVALID);
-      });
-    });
-  });
-};
+      ].forEach(function(fixture) {
+        var lp = new LineParser(fixture)
+        lp.type.should.equal(LineParser.TYPE.INVALID)
+      })
+    })
+  })
+}
