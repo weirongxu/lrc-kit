@@ -1,7 +1,7 @@
 var fs = require('fs')
 var fixtures = {}
 
-[
+;[
   'main.lrc'
 ].forEach((name) => {
   fixtures[name] = fs.readFileSync(__dirname + '/fixtures/' + name, 'utf-8')
