@@ -1,4 +1,4 @@
-# lrc kit [![Build Status](https://img.shields.io/circleci/project/weirongxu/lrc-kit/master.svg)](https://circleci.com/gh/weirongxu/lrc-kit)
+# LRC Kit [![Build Status](https://img.shields.io/circleci/project/weirongxu/lrc-kit/master.svg)](https://circleci.com/gh/weirongxu/lrc-kit)
 lrc parser and runner
 
 ## Install
@@ -11,10 +11,7 @@ npm i -S lrc-kit
 ### Usage
 import
 ```javascript
-// ES5
 var Lrc = require('lrc-kit').Lrc
-// ES6
-import {Lrc} from 'lrc-kit'
 ```
 
 parse lyric
@@ -35,7 +32,7 @@ lrc.lyrics
 make lyric
 ```javascript
 var lrc = new Lrc()
-lrc.info['ar'] = 'Lyrics artist';
+lrc.info['ar'] = 'Lyrics artist'
 lrc.lyrics.push({
     content: "i guess you're my creep tonight",
     timestamp: 9.01,
@@ -100,10 +97,7 @@ parse lyirc text and return a lrc object
 ### Usage
 import
 ```javascript
-// ES5
 var Runner = require('lrc-kit').Runner
-// ES6
-import {Runner} from 'lrc-kit'
 ```
 
 run
