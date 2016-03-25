@@ -14,7 +14,15 @@ export default class LineParser {
   /**
    * line parse lrc of timestamp
    * @example
-   * // TODO
+   * var lp = new LineParser('[ti: Song title]')
+   * lp.type === LineParser.TYPE.INFO
+   * lp.key === 'ti'
+   * lp.value === 'Song title'
+   *
+   * var lp = new LineParser('[10:10.10]hello')
+   * lp.type === LineParser.TYPE.TIME
+   * lp.timestamp === 10*60+10.10
+   * lp.content === 'hello'
    * @constructs
    * @param {string} text
    */
