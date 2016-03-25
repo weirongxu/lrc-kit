@@ -12,6 +12,12 @@
     "prepublish": "npm test && npm run build"
   },
   "author": "Weirong Xu <weirongxu.raidou@gmail.com>",
+  "homepage": "https://github.com/weirongxu/lrc-kit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/weirongxu/lrc-kit.git"
+  },
+  "bugs": "https://github.com/weirongxu/lrc-kit/issues",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.4.5",
