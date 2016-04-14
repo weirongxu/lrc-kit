@@ -37,43 +37,55 @@ module.exports = function(cnx){
       [
         'basic',
         '[1:10.10]hello',
-        1*60+10.10,
+        [1*60+10.10],
         'hello',
       ],
       [
         'use ":" instead of "."',
         '[1:10:10]hello',
-        1*60+10.10,
+        [1*60+10.10],
         'hello',
       ],
       [
         'content tirm',
         '[1:10.10] hello ',
-        1*60+10.10,
+        [1*60+10.10],
         'hello',
       ],
       [
         'time tirm1',
         '[ 1 : 10 . 10 ] hello ',
-        1*60+10.10,
+        [1*60+10.10],
         'hello',
       ],
       [
         'prefix 0',
         '[01:010.010] hello ',
-        1*60+10.01,
+        [1*60+10.01],
         'hello',
       ],
       [
         'prefix space',
         '  [1:00] hello',
-        1*60,
+        [1*60],
         'hello',
       ],
-    ].forEach(function(fixture){
+      [
+        'two timestamps',
+        ' [1 : 00 ][ 2: 00] hello',
+        [1*60, 2*60],
+        'hello',
+      ],
+      [
+        'three timestamps',
+        ' [1:00 ]  [  2:00] [ 3:01 ]  hello',
+        [1*60, 2*60, 3*60+1],
+        'hello',
+      ],
+    ].forEach(function(fixture) {
       it(fixture[0], function(){
         var lp = new LineParser(fixture[1])
-        lp.timestamp.should.equal(fixture[2])
+        lp.timestamps.should.deepEqual(fixture[2])
         lp.content.should.equal(fixture[3])
       })
     })

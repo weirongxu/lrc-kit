@@ -18,14 +18,19 @@ parse lyric
 ```javascript
 var lrc = Lrc.parse(`
   [ar:Lyrics artist]
-  [00:09.010]i guess you're my creep tonight
+  [00:09.010][00:30.000]i guess you're my creep tonight
 `)
+
 lrc.info
 // {'ar': 'Lyrics artist'}
+
 lrc.lyrics
 // [{
 //   content: "i guess you're my creep tonight",
 //   timestamp: 9.01
+// }, {
+//   content: "i guess you're my creep tonight",
+//   timestamp: 30.0
 // }]
 ```
 
@@ -63,7 +68,7 @@ parse lyirc text and return a lrc object
     'al': 'Album where the song is from',
     'ti': 'Lyrics (song) title',
     'au': 'Creator of the Songtext',
-    'length': 'music length2:50',
+    'length': 'music length, such as 2:50',
     'by': 'Creator of the LRC file',
     'offset': '+/- Overall timestamp adjustment in milliseconds, + shifts time up, - shifts down',
     're': 'The player or editor that created the LRC file',
@@ -89,8 +94,11 @@ parse lyirc text and return a lrc object
 - **lrc.offset(offset)**
     offset all lyrics
 
-- **lrc.toString()**
+- **lrc.toString(options)**
     generate lyric string
+    - options.combine (boolean) lyrics combine by same content
+    - options.sort (boolean) lyrics sort by timestamp
+    - options.lineFormat (string) newline format
 
 ## Runner
 
@@ -109,6 +117,7 @@ audio.addEventListener('timeupdate', () => {
     var lyric = runner.curLyric()
     // or
     var lyric = runner.getLyric(runner.curIndex())
+
     lyric
     // {
     //    content: "i guess you're my creep tonight",

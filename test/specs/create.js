@@ -7,9 +7,9 @@ module.exports = function(cnx) {
   })
 
 
-  it('createTimestamp', function(){
-    Lrc.createTimestamp(143.54).should.equal('02:23.54')
-    Lrc.createTimestamp(3.21).should.equal('00:03.21')
+  it('timestampToString', function(){
+    Lrc.timestampToString(143.54).should.equal('02:23.54')
+    Lrc.timestampToString(3.21).should.equal('00:03.21')
   })
 
   describe('modify lyrics', function() {
@@ -24,7 +24,7 @@ module.exports = function(cnx) {
         [
           '[re:raidou]',
           '[ve:1.00]',
-          `[${Lrc.createTimestamp(15.05)}]test`,
+          `[${Lrc.timestampToString(15.05)}]test`,
         ].join('\r\n')
       )
     })
@@ -38,24 +38,24 @@ module.exports = function(cnx) {
         [
           '[re:raidou]',
           '[ve:1.00]',
-          `[${Lrc.createTimestamp(15.05)}]test`,
-          `[${Lrc.createTimestamp(19.21)}]test2`,
+          `[${Lrc.timestampToString(15.05)}]test`,
+          `[${Lrc.timestampToString(19.21)}]test2`,
         ].join('\r\n')
       )
     })
 
     it('prepend lyrics', function(){
       lrc.lyrics.splice(0, 0, {
-        timestamp: 27.13,
+        timestamp: 13.13,
         content: 'test3',
       })
       lrc.toString().should.deepEqual(
         [
           '[re:raidou]',
           '[ve:1.00]',
-          `[${Lrc.createTimestamp(27.13)}]test3`,
-          `[${Lrc.createTimestamp(15.05)}]test`,
-          `[${Lrc.createTimestamp(19.21)}]test2`,
+          `[${Lrc.timestampToString(13.13)}]test3`,
+          `[${Lrc.timestampToString(15.05)}]test`,
+          `[${Lrc.timestampToString(19.21)}]test2`,
         ].join('\r\n')
       )
     })
@@ -69,28 +69,28 @@ module.exports = function(cnx) {
         [
           '[re:raidou]',
           '[ve:1.00]',
-          `[${Lrc.createTimestamp(10.23)}]insertBefore`,
-          `[${Lrc.createTimestamp(27.13)}]test3`,
-          `[${Lrc.createTimestamp(15.05)}]test`,
-          `[${Lrc.createTimestamp(19.21)}]test2`,
+          `[${Lrc.timestampToString(10.23)}]insertBefore`,
+          `[${Lrc.timestampToString(13.13)}]test3`,
+          `[${Lrc.timestampToString(15.05)}]test`,
+          `[${Lrc.timestampToString(19.21)}]test2`,
         ].join('\r\n')
       )
     })
 
     it('insertAfter lyrics', function(){
       lrc.lyrics.splice(1, 0, {
-        timestamp: 10.23,
+        timestamp: 12.23,
         content: 'insertAfter',
       })
       lrc.toString().should.deepEqual(
         [
           '[re:raidou]',
           '[ve:1.00]',
-          `[${Lrc.createTimestamp(10.23)}]insertBefore`,
-          `[${Lrc.createTimestamp(10.23)}]insertAfter`,
-          `[${Lrc.createTimestamp(27.13)}]test3`,
-          `[${Lrc.createTimestamp(15.05)}]test`,
-          `[${Lrc.createTimestamp(19.21)}]test2`,
+          `[${Lrc.timestampToString(10.23)}]insertBefore`,
+          `[${Lrc.timestampToString(12.23)}]insertAfter`,
+          `[${Lrc.timestampToString(13.13)}]test3`,
+          `[${Lrc.timestampToString(15.05)}]test`,
+          `[${Lrc.timestampToString(19.21)}]test2`,
         ].join('\r\n')
       )
     })
@@ -106,10 +106,59 @@ module.exports = function(cnx) {
         [
           '[re:raidou]',
           '[ve:1.00]',
-          `[${Lrc.createTimestamp(15.05)}]test`,
+          `[${Lrc.timestampToString(15.05)}]test`,
         ].join('\r\n')
       )
     })
+  })
+
+  it('should sort', function(){
+    lrc.lyrics = [
+      {
+        timestamp: 16.05,
+        content: 'test2',
+      },
+      {
+        timestamp: 15.05,
+        content: 'test',
+      },
+    ]
+    lrc.toString({sort: false}).should.deepEqual(
+      [
+        `[${Lrc.timestampToString(16.05)}]test2`,
+        `[${Lrc.timestampToString(15.05)}]test`,
+      ].join('\r\n')
+    )
+    lrc.toString().should.deepEqual(
+      [
+        `[${Lrc.timestampToString(15.05)}]test`,
+        `[${Lrc.timestampToString(16.05)}]test2`,
+      ].join('\r\n')
+    )
+  })
+
+  it('should combine time', function(){
+    lrc.lyrics = [
+      {
+        timestamp: 15.05,
+        content: 'test',
+      },
+      {
+        timestamp: 16.05,
+        content: 'test',
+      },
+    ]
+    lrc.toString({combine: false}).should.deepEqual(
+      [
+        `[${Lrc.timestampToString(15.05)}]test`,
+        `[${Lrc.timestampToString(16.05)}]test`,
+      ].join('\r\n')
+    )
+    lrc.toString().should.deepEqual(
+      [
+        `[${Lrc.timestampToString(15.05)}][${Lrc.timestampToString(16.05)}]test`
+      ].join('\r\n')
+    )
   })
 
   it('should offset time', function(){
@@ -122,13 +171,13 @@ module.exports = function(cnx) {
     lrc.offset(1)
     lrc.toString().should.deepEqual(
       [
-        `[${Lrc.createTimestamp(16.05)}]test`,
+        `[${Lrc.timestampToString(16.05)}]test`,
       ].join('\r\n')
     )
     lrc.offset(-2)
     lrc.toString().should.deepEqual(
       [
-        `[${Lrc.createTimestamp(14.05)}]test`,
+        `[${Lrc.timestampToString(14.05)}]test`,
       ].join('\r\n')
     )
   })
