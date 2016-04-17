@@ -50,7 +50,8 @@ lrc.toString()
 lrc.offset(-3)
 lrc.toString()
 // [ar:Lyrics artist]
-// [00:09.010]i guess you're my creep tonight
+// [00:06.01]i guess you're my creep tonight
+
 ```
 
 ### API
