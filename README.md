@@ -2,6 +2,12 @@
 lrc parser and runner
 
 ## Install
+bower
+```shell
+bower i -S lrc-kit
+```
+
+npm
 ```shell
 npm i -S lrc-kit
 ```
@@ -9,7 +15,12 @@ npm i -S lrc-kit
 ## Lrc
 
 ### Usage
-import
+import for browser with bower
+```javascript
+var Lrc = LrcKit.Lrc
+```
+
+import for CommonJS
 ```javascript
 var Lrc = require('lrc-kit').Lrc
 ```
@@ -104,7 +115,12 @@ parse lyirc text and return a lrc object
 ## Runner
 
 ### Usage
-import
+import for browser with bower
+```javascript
+var Runner = LrcKit.Runner
+```
+
+import for CommonJS
 ```javascript
 var Runner = require('lrc-kit').Runner
 ```
