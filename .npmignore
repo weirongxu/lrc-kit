@@ -1,2 +1,5 @@
 /node_modules
 /bower_components
+/bower.json
+/circle.yml
+/webpack.config.js
