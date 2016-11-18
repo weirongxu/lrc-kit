@@ -28,12 +28,13 @@ var Lrc = require('lrc-kit').Lrc
 parse lyric
 ```javascript
 var lrc = Lrc.parse(`
+  [ti:Title]
   [ar:Lyrics artist]
   [00:09.010][00:30.000]i guess you're my creep tonight
 `)
 
 lrc.info
-// {'ar': 'Lyrics artist'}
+// { ti: 'Title', ar: 'Lyrics artist' }
 
 lrc.lyrics
 // [{
@@ -53,15 +54,25 @@ lrc.lyrics.push({
     content: "i guess you're my creep tonight",
     timestamp: 9.01,
 })
+lrc.lyrics.push({
+    content: "i guess you're my creep tonight",
+    timestamp: 30.0,
+})
 
 lrc.toString()
 // [ar:Lyrics artist]
+// [00:30.00][00:09.01]i guess you're my creep tonight
+
+lrc.toString({combine: false})
+// [ar:Lyrics artist]
 // [00:09.01]i guess you're my creep tonight
+// [00:30.00]i guess you're my creep tonight
+
 
 lrc.offset(-3)
 lrc.toString()
 // [ar:Lyrics artist]
-// [00:06.01]i guess you're my creep tonight
+// [00:27.00][00:06.01]i guess you're my creep tonight
 
 ```
 
@@ -164,3 +175,7 @@ runner.lrcUpdate() // Must call lrcUpdate() when update lyrics
 - **runner.getLyrics()** get `runner.lrc.lyrics`
 - **runner.curIndex()** current index
 - **runner.curLyric()** current lyric
+
+## License
+
+[MIT](./LICENSE)
