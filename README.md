@@ -1,4 +1,9 @@
-# LRC Kit [![Build Status](https://img.shields.io/circleci/project/weirongxu/lrc-kit/master.svg)](https://circleci.com/gh/weirongxu/lrc-kit)
+# LRC Kit
+
+[![NPM version](https://img.shields.io/npm/v/lrc-kit.svg?style=flat-square)](https://npmjs.com/package/lrc-kit)
+[![NPM downloads](https://img.shields.io/npm/dm/lrc-kit.svg?style=flat-square)](https://npmjs.com/package/lrc-kit)
+[![Build Status](https://img.shields.io/circleci/project/weirongxu/lrc-kit/master.svg?style=flat-square)](https://circleci.com/gh/weirongxu/lrc-kit)
+
 lrc parser and runner
 
 ## Install
