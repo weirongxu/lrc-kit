@@ -1,6 +1,6 @@
 {
   "name": "lrc-kit",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "lrc parser, maker, runner",
   "main": "lib/lrc-kit.js",
   "scripts": {
