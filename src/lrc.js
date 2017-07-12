@@ -1,6 +1,3 @@
-import isString from 'lodash/isString'
-import isNumber from 'lodash/isNumber'
-import isObject from 'lodash/isObject'
 import LineParser from './line-parser'
 
 export default class Lrc {
@@ -43,17 +40,8 @@ export default class Lrc {
     return lrc
   }
 
-  static checkLyricObject(lyric) {
-    return isObject(lyric)
-      && 'timestamp' in lyric && isNumber(lyric.timestamp)
-      && 'content' in lyric && isString(lyric.content)
-  }
-
   static padZero(num, size=2) {
-    if (isNumber(num)) {
-      num = num.toString()
-    }
-    while (num.split('.')[0].length < size) num = '0' + num
+    while (num.toString().split('.')[0].length < size) num = '0' + num
     return num
   }
 
