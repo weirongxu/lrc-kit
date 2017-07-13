@@ -143,7 +143,7 @@ var Runner = require('lrc-kit').Runner
 
 run
 ```javascript
-var runner = Runner(Lrc.parse(...))
+var runner = new Runner(Lrc.parse(...))
 
 audio.addEventListener('timeupdate', () => {
     runner.updateTime(audio.currentTime)
