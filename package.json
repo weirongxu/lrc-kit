@@ -10,8 +10,13 @@
     "dev": "mocha --watch",
     "test": "npm run lint && npm run unit",
     "unit": "mocha",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "prepublish": "npm run build"
   },
+  "files": [
+    "lib",
+    "src"
+  ],
   "author": "Weirong Xu <weirongxu.raidou@gmail.com>",
   "homepage": "https://github.com/weirongxu/lrc-kit",
   "repository": {
@@ -35,6 +40,6 @@
     "webpack": "^1.13.1"
   },
   "dependencies": {
-    "clone": "^1.0.2"
+    "lodash": "^4.17.4"
   }
 }

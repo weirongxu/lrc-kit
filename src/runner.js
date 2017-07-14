@@ -1,5 +1,5 @@
 import Lrc from './lrc'
-import clone from 'clone'
+import clone from 'lodash/cloneDeep'
 
 export default class Runner {
   /**
