@@ -1,5 +1,4 @@
 import Lrc from './lrc'
-import clone from 'lodash/cloneDeep'
 
 export default class Runner {
   /**
@@ -15,7 +14,7 @@ export default class Runner {
    *  @param {Lrc} lrc
    */
   setLrc(lrc) {
-    this.lrc = clone(lrc)
+    this.lrc = lrc.clone()
     this.lrcUpdate()
   }
 

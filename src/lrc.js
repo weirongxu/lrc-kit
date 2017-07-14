@@ -66,6 +66,23 @@ export default class Lrc {
     })
   }
 
+  clone() {
+    function clonePlainObject(obj) {
+      let newObj = {}
+      for (let key in obj) {
+        newObj[key] = obj[key]
+      }
+      return newObj
+    }
+    let lrc = new this.constructor
+    lrc.info = clonePlainObject(this.info)
+    lrc.lyrics =  this.lyrics.reduce((ret, lyric) => {
+      ret.push(clonePlainObject(lyric))
+      return ret
+    }, [])
+    return lrc
+  }
+
   /**
    * get lrc text
    * @param {object} opts options

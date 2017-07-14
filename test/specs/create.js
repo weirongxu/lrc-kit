@@ -181,4 +181,15 @@ module.exports = function(cnx) {
       ].join('\r\n')
     )
   })
+
+  it('should clone', function() {
+    let newLrc = lrc.clone()
+    newLrc.info.should.deepEqual(lrc.info)
+    newLrc.info.should.not.equal(lrc.info)
+    newLrc.lyrics.should.deepEqual(lrc.lyrics)
+    newLrc.lyrics.should.not.equal(lrc.lyrics)
+    newLrc.lyrics.forEach(function(lyric, index) {
+      lyric.should.not.equal(lrc.lyrics[index])
+    })
+  })
 }
