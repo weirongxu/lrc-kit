@@ -1,3 +1,4 @@
+export const lrcText = `
 [ar:Lyrics artist]
 [al:Album where the song is from]
 [ti:Lyrics (song) title]
@@ -22,3 +23,4 @@ copy line
 [00:28.080]And I don't even recognize myself
 
 [00:32.260]why can't I get out of my own way
+`;

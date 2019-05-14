@@ -1,19 +1,17 @@
-import Lrc from './lrc'
+import { Lrc } from './lrc'
 
-export default class Runner {
-  /**
-   * @param {Lrc} lrc
-   */
-  constructor(lrc = new Lrc(), offset=true) {
+export class Runner {
+  offset: boolean;
+  _currentIndex: number;
+  lrc: Lrc;
+
+  constructor(lrc: Lrc = new Lrc(), offset: boolean = true) {
     this.offset = offset
     this._currentIndex = -1
     this.setLrc(lrc)
   }
 
-  /**
-   *  @param {Lrc} lrc
-   */
-  setLrc(lrc) {
+  setLrc(lrc: Lrc) {
     this.lrc = lrc.clone()
     this.lrcUpdate()
   }
@@ -27,7 +25,7 @@ export default class Runner {
 
   _offsetAlign() {
     if ('offset' in this.lrc.info) {
-      var offset = parseInt(this.lrc.info.offset) / 1000
+      const offset = parseInt(this.lrc.info.offset) / 1000
       if (! isNaN(offset)) {
         this.lrc.offset(offset)
         delete this.lrc.info.offset
@@ -39,10 +37,7 @@ export default class Runner {
     this.lrc.lyrics.sort((a, b) => a.timestamp - b.timestamp)
   }
 
-  /**
-   *  @param {number} timestamp
-   */
-  timeUpdate(timestamp) {
+  timeUpdate(timestamp: number) {
     if (this._currentIndex >= this.lrc.lyrics.length) {
       this._currentIndex = this.lrc.lyrics.length - 1
     } else if (this._currentIndex < -1) {
@@ -51,11 +46,11 @@ export default class Runner {
     this._currentIndex = this._findIndex(timestamp, this._currentIndex)
   }
 
-  _findIndex(timestamp, startIndex) {
-    var curFrontTimestamp = startIndex == -1 ?
+  _findIndex(timestamp: number, startIndex: number) {
+    const curFrontTimestamp = startIndex == -1 ?
       Number.NEGATIVE_INFINITY : this.lrc.lyrics[startIndex].timestamp
 
-    var curBackTimestamp = (startIndex == this.lrc.lyrics.length - 1) ?
+    const curBackTimestamp = (startIndex == this.lrc.lyrics.length - 1) ?
       Number.POSITIVE_INFINITY : this.lrc.lyrics[startIndex+1].timestamp
 
     if (timestamp < curFrontTimestamp) {
@@ -81,10 +76,7 @@ export default class Runner {
     return this.lrc.lyrics
   }
 
-  /**
-   *  @return {Object} {''}
-   */
-  getLyric(index = this.curIndex()) {
+  getLyric(index: number = this.curIndex()) {
     if (index >= 0 && index <= this.lrc.lyrics.length - 1) {
       return this.lrc.lyrics[index]
     } else {

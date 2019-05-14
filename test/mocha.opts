@@ -1,4 +1,0 @@
---compilers js:babel-register
---require should
---reporter spec
---ui bdd
