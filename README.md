@@ -2,7 +2,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/lrc-kit.svg?style=flat-square)](https://npmjs.com/package/lrc-kit)
 [![NPM downloads](https://img.shields.io/npm/dm/lrc-kit.svg?style=flat-square)](https://npmjs.com/package/lrc-kit)
-[![Build Status](https://img.shields.io/circleci/project/weirongxu/lrc-kit/master.svg?style=flat-square)](https://circleci.com/gh/weirongxu/lrc-kit)
+[![Build Status](https://img.shields.io/travis/weirongxu/lrc-kit/master.svg?style=flat-square)](https://travis-ci.com/weirongxu/lrc-kit)
 
 lrc parser and runner
 
