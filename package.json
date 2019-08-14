@@ -2,9 +2,12 @@
   "name": "lrc-kit",
   "version": "1.0.0",
   "description": "lrc parser, maker, runner",
-  "main": "lib/lrc-kit.js",
+  "main": "lib/cjs/lrc-kit.js",
+  "module": "lib/esm/lrc-kit.js",
   "scripts": {
-    "build": "tsc",
+    "build": "yarn run build:esm && yarn run build:cjs",
+    "build:esm": "tsc --module es2015 --target es5 --outDir lib/esm",
+    "build:cjs": "tsc --module commonjs --target es5 --outDir lib/cjs",
     "clean": "rm -rf lib",
     "test": "jest",
     "prepare": "yarn clean && yarn build"

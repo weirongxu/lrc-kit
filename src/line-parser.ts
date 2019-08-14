@@ -8,7 +8,7 @@ export const TIME_REGEXP = /^\s*(\d+)\s*:\s*(\d+(\s*[\.:]\s*\d+)?)\s*$/;
 export enum LineType {
   INVALID = 'INVALID',
   INFO = 'INFO',
-  TIME = 'TIME'
+  TIME = 'TIME',
 }
 
 export interface InvalidLine {
@@ -40,18 +40,18 @@ export function parseTags(line: string): null | [string[], string] {
 
 export function parseTime(tags: string[], content: string): TimeLine {
   const timestamps: number[] = [];
-  tags.forEach(tag => {
+  tags.forEach((tag) => {
     const matches = TIME_REGEXP.exec(tag)!;
     const minutes = parseFloat(matches[1]);
     const seconds = parseFloat(
-      matches[2].replace(/\s+/g, '').replace(':', '.')
+      matches[2].replace(/\s+/g, '').replace(':', '.'),
     );
     timestamps.push(minutes * 60 + seconds);
   });
   return {
     type: LineType.TIME,
     timestamps,
-    content: content.trim()
+    content: content.trim(),
   };
 }
 
@@ -60,7 +60,7 @@ export function parseInfo(tag: string): InfoLine {
   return {
     type: LineType.INFO,
     key: matches[1].trim(),
-    value: matches[2].trim()
+    value: matches[2].trim(),
   };
 }
 
@@ -89,11 +89,11 @@ export function parseLine(line: string): InfoLine | TimeLine | InvalidLine {
       }
     }
     return {
-      type: LineType.INVALID
+      type: LineType.INVALID,
     };
   } catch (_e) {
     return {
-      type: LineType.INVALID
+      type: LineType.INVALID,
     };
   }
 }

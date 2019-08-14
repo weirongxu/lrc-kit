@@ -15,38 +15,38 @@ describe('modify lyrics', () => {
   lrc = new Lrc();
 
   // set lyrics
-  lrc.info['re'] = 'raidou'
-  lrc.info['ve'] = '1.00'
-  lrc.lyrics = [{
-    timestamp: 15.05,
-    content: 'test',
-  }]
+  lrc.info['re'] = 'raidou';
+  lrc.info['ve'] = '1.00';
+  lrc.lyrics = [
+    {
+      timestamp: 15.05,
+      content: 'test',
+    },
+  ];
   expect(lrc.toString()).toEqual(
-    [
-      '[re:raidou]',
-      '[ve:1.00]',
-      `[${timestampToString(15.05)}]test`,
-    ].join('\r\n')
-  )
+    ['[re:raidou]', '[ve:1.00]', `[${timestampToString(15.05)}]test`].join(
+      '\r\n',
+    ),
+  );
 
   // append lyric
   lrc.lyrics.push({
     timestamp: 19.21,
-    content: 'test2'
+    content: 'test2',
   });
   expect(lrc.toString()).toEqual(
     [
       '[re:raidou]',
       '[ve:1.00]',
       `[${timestampToString(15.05)}]test`,
-      `[${timestampToString(19.21)}]test2`
-    ].join('\r\n')
+      `[${timestampToString(19.21)}]test2`,
+    ].join('\r\n'),
   );
 
   // prepend lyrics
   lrc.lyrics.splice(0, 0, {
     timestamp: 13.13,
-    content: 'test3'
+    content: 'test3',
   });
   expect(lrc.toString()).toEqual(
     [
@@ -54,14 +54,14 @@ describe('modify lyrics', () => {
       '[ve:1.00]',
       `[${timestampToString(13.13)}]test3`,
       `[${timestampToString(15.05)}]test`,
-      `[${timestampToString(19.21)}]test2`
-    ].join('\r\n')
+      `[${timestampToString(19.21)}]test2`,
+    ].join('\r\n'),
   );
 
   // insertBefore lyrics
   lrc.lyrics.splice(0, 0, {
     timestamp: 10.23,
-    content: 'insertBefore'
+    content: 'insertBefore',
   });
   expect(lrc.toString()).toEqual(
     [
@@ -70,14 +70,14 @@ describe('modify lyrics', () => {
       `[${timestampToString(10.23)}]insertBefore`,
       `[${timestampToString(13.13)}]test3`,
       `[${timestampToString(15.05)}]test`,
-      `[${timestampToString(19.21)}]test2`
-    ].join('\r\n')
+      `[${timestampToString(19.21)}]test2`,
+    ].join('\r\n'),
   );
 
   // insertAfter lyrics
   lrc.lyrics.splice(1, 0, {
     timestamp: 12.23,
-    content: 'insertAfter'
+    content: 'insertAfter',
   });
   expect(lrc.toString()).toEqual(
     [
@@ -87,21 +87,21 @@ describe('modify lyrics', () => {
       `[${timestampToString(12.23)}]insertAfter`,
       `[${timestampToString(13.13)}]test3`,
       `[${timestampToString(15.05)}]test`,
-      `[${timestampToString(19.21)}]test2`
-    ].join('\r\n')
+      `[${timestampToString(19.21)}]test2`,
+    ].join('\r\n'),
   );
 
   // reset lyrics
   lrc.lyrics = [
     {
       timestamp: 15.05,
-      content: 'test'
-    }
+      content: 'test',
+    },
   ];
   expect(lrc.toString()).toEqual(
     ['[re:raidou]', '[ve:1.00]', `[${timestampToString(15.05)}]test`].join(
-      '\r\n'
-    )
+      '\r\n',
+    ),
   );
 });
 
@@ -109,24 +109,24 @@ test('should sort', () => {
   lrc.lyrics = [
     {
       timestamp: 16.05,
-      content: 'test2'
+      content: 'test2',
     },
     {
       timestamp: 15.05,
-      content: 'test'
-    }
+      content: 'test',
+    },
   ];
   expect(lrc.toString({ sort: false })).toEqual(
     [
       `[${timestampToString(16.05)}]test2`,
-      `[${timestampToString(15.05)}]test`
-    ].join('\r\n')
+      `[${timestampToString(15.05)}]test`,
+    ].join('\r\n'),
   );
   expect(lrc.toString()).toEqual(
     [
       `[${timestampToString(15.05)}]test`,
-      `[${timestampToString(16.05)}]test2`
-    ].join('\r\n')
+      `[${timestampToString(16.05)}]test2`,
+    ].join('\r\n'),
   );
 });
 
@@ -134,23 +134,23 @@ test('should combine time', () => {
   lrc.lyrics = [
     {
       timestamp: 15.05,
-      content: 'test'
+      content: 'test',
     },
     {
       timestamp: 16.05,
-      content: 'test'
-    }
+      content: 'test',
+    },
   ];
   expect(lrc.toString({ combine: false })).toEqual(
     [
       `[${timestampToString(15.05)}]test`,
-      `[${timestampToString(16.05)}]test`
-    ].join('\r\n')
+      `[${timestampToString(16.05)}]test`,
+    ].join('\r\n'),
   );
   expect(lrc.toString()).toEqual(
     [`[${timestampToString(15.05)}][${timestampToString(16.05)}]test`].join(
-      '\r\n'
-    )
+      '\r\n',
+    ),
   );
 });
 
@@ -158,16 +158,16 @@ test('should offset time', () => {
   lrc.lyrics = [
     {
       timestamp: 15.05,
-      content: 'test'
-    }
+      content: 'test',
+    },
   ];
   lrc.offset(1);
   expect(lrc.toString()).toEqual(
-    [`[${timestampToString(16.05)}]test`].join('\r\n')
+    [`[${timestampToString(16.05)}]test`].join('\r\n'),
   );
   lrc.offset(-2);
   expect(lrc.toString()).toEqual(
-    [`[${timestampToString(14.05)}]test`].join('\r\n')
+    [`[${timestampToString(14.05)}]test`].join('\r\n'),
   );
 });
 
