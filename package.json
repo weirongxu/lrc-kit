@@ -4,6 +4,10 @@
   "description": "lrc parser, maker, runner",
   "main": "lib/cjs/lrc-kit.js",
   "module": "lib/esm/lrc-kit.js",
+  "keywords": [
+    "lrc",
+    "lyric"
+  ],
   "scripts": {
     "build": "yarn run build:esm && yarn run build:cjs",
     "build:esm": "tsc --module es2015 --target es5 --outDir lib/esm",
