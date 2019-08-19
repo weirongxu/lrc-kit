@@ -131,7 +131,7 @@ run
 var runner = new Runner(Lrc.parse(...))
 
 audio.addEventListener('timeupdate', () => {
-    runner.updateTime(audio.currentTime)
+    runner.timeUpdate(audio.currentTime)
     var lyric = runner.curLyric()
     // or
     var lyric = runner.getLyric(runner.curIndex())
