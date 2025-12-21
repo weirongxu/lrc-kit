@@ -3,11 +3,13 @@ import { Lrc } from './lrc';
 export class Runner {
   offset: boolean;
   _currentIndex: number;
+  _currentWordIndex: number[];
   lrc!: Lrc;
 
   constructor(lrc: Lrc = new Lrc(), offset: boolean = true) {
     this.offset = offset;
     this._currentIndex = -1;
+    this._currentWordIndex = [];
     this.setLrc(lrc);
   }
 
@@ -44,6 +46,7 @@ export class Runner {
       this._currentIndex = -1;
     }
     this._currentIndex = this._findIndex(timestamp, this._currentIndex);
+    this._currentWordIndex = this._findWordIndex(timestamp, this._currentIndex);
   }
 
   _findIndex(timestamp: number, startIndex: number): number {
@@ -70,6 +73,21 @@ export class Runner {
     } else {
       return startIndex;
     }
+  }
+
+  _findWordIndex(timestamp: number, startIndex: number): number[] {
+    let currentWordIndex: number[] = [];
+
+    const line = this.lrc.lyrics[startIndex];
+    if (startIndex >= 0 && line.wordTimestamps) {
+      line.wordTimestamps.forEach((val, key) => {
+        if (val.timestamp <= timestamp) {
+          currentWordIndex.push(key);
+        }
+      })
+    }
+
+    return currentWordIndex;
   }
 
   getInfo() {

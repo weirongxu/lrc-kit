@@ -2,11 +2,14 @@ import { parseLine, LineType } from './line-parser';
 
 export interface Lyric {
   timestamp: number;
+  wordTimestamps?: {timestamp: number, content: string}[];
+  rawContent: string;
   content: string;
 }
 
 export interface CombineLyric {
   timestamps: number[];
+  rawContent: string;
   content: string;
 }
 
@@ -41,6 +44,7 @@ export interface ToStringOptions {
 export class Lrc {
   info: Info = {};
   lyrics: Lyric[] = [];
+  plain: string = "";
 
   /**
    * parse lrc text and return a Lrc object
@@ -48,6 +52,8 @@ export class Lrc {
   static parse(text: string) {
     const lyrics: Lyric[] = [];
     const info: Info = {};
+    let plain: string = "";
+
     text
       .split(/\r\n|[\n\r]/g)
       .map((line) => {
@@ -62,8 +68,12 @@ export class Lrc {
             line.timestamps.forEach((timestamp) => {
               lyrics.push({
                 timestamp: timestamp,
+                wordTimestamps: line.wordTimestamps,
+                rawContent: line.rawContent,
                 content: line.content,
               });
+
+              plain += `${line.content}\n`;
             });
             break;
           default:
@@ -73,6 +83,7 @@ export class Lrc {
     var lrc = new this();
     lrc.lyrics = lyrics;
     lrc.info = info;
+    lrc.plain = plain;
     return lrc;
   }
 
@@ -117,7 +128,7 @@ export class Lrc {
     opts.sort = 'sort' in opts ? opts.sort : true;
 
     const lines: string[] = [],
-      lyricsMap: Record<string, number[]> = {},
+      lyricsMap: Record<string, [[number], string]> = {},
       lyricsList: CombineLyric[] = [];
 
     // generate info
@@ -129,9 +140,9 @@ export class Lrc {
       // uniqueness
       this.lyrics.forEach((lyric) => {
         if (lyric.content in lyricsMap) {
-          lyricsMap[lyric.content].push(lyric.timestamp);
+          lyricsMap[lyric.content][0].push(lyric.timestamp);
         } else {
-          lyricsMap[lyric.content] = [lyric.timestamp];
+          lyricsMap[lyric.content] = [[lyric.timestamp], lyric.rawContent!];
         }
       });
 
@@ -141,7 +152,8 @@ export class Lrc {
           lyricsMap[content].sort();
         }
         lyricsList.push({
-          timestamps: lyricsMap[content],
+          timestamps: lyricsMap[content][0],
+          rawContent: lyricsMap[content][1],
           content: content,
         });
       }
