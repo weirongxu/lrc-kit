@@ -167,7 +167,7 @@ export class Lrc {
         lines.push(
           `[${lyric.timestamps
             .map((timestamp) => timestampToString(timestamp))
-            .join('][')}]${lyric.content || ''}`,
+            .join('][')}]${lyric.rawContent || ''}`,
         );
       });
     } else {
