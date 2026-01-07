@@ -2,7 +2,7 @@ import { parseLine, LineType } from './line-parser';
 
 export interface Lyric {
   timestamp: number;
-  wordTimestamps?: {timestamp: number, content: string}[];
+  wordTimestamps?: { timestamp: number; content: string }[];
   rawContent: string;
   content: string;
 }
@@ -35,6 +35,10 @@ export function timestampToString(timestamp: number): string {
 
 export type LineFormat = '\r\n' | '\r' | '\n';
 
+export type ParseOptions = {
+  enhanced?: boolean;
+};
+
 export interface ToStringOptions {
   combine: boolean;
   sort: boolean;
@@ -44,42 +48,41 @@ export interface ToStringOptions {
 export class Lrc {
   info: Info = {};
   lyrics: Lyric[] = [];
-  plain: string = "";
+  plain: string = '';
 
   /**
    * parse lrc text and return a Lrc object
    */
-  static parse(text: string) {
+  static parse(text: string, options?: ParseOptions) {
     const lyrics: Lyric[] = [];
     const info: Info = {};
-    let plain: string = "";
+    let plain: string = '';
 
-    text
-      .split(/\r\n|[\n\r]/g)
-      .map((line) => {
-        return parseLine(line);
-      })
-      .forEach((line) => {
-        switch (line.type) {
-          case LineType.INFO:
-            info[line.key] = line.value;
-            break;
-          case LineType.TIME:
-            line.timestamps.forEach((timestamp) => {
-              lyrics.push({
-                timestamp: timestamp,
-                wordTimestamps: line.wordTimestamps,
-                rawContent: line.rawContent,
-                content: line.content,
-              });
+    const lines = text.split(/\r\n|[\n\r]/g).map((line) => {
+      return parseLine(line, options);
+    });
 
-              plain += `${line.content}\n`;
+    for (const line of lines) {
+      switch (line.type) {
+        case LineType.INFO:
+          info[line.key] = line.value;
+          break;
+        case LineType.TIME:
+          for (const timestamp of line.timestamps) {
+            lyrics.push({
+              timestamp: timestamp,
+              wordTimestamps: line.wordTimestamps,
+              rawContent: line.rawContent,
+              content: line.content,
             });
-            break;
-          default:
-            break;
-        }
-      });
+
+            plain += `${line.content}\n`;
+          }
+          break;
+        default:
+          break;
+      }
+    }
     var lrc = new this();
     lrc.lyrics = lyrics;
     lrc.info = info;
@@ -88,31 +91,21 @@ export class Lrc {
   }
 
   offset(offsetTime: number) {
-    this.lyrics.forEach((lyric) => {
+    for (const lyric of this.lyrics) {
       lyric.timestamp += offsetTime;
       if (lyric.timestamp < 0) {
         lyric.timestamp = 0;
       }
-    });
+    }
   }
 
   clone() {
-    function clonePlainObject<T extends Record<any, any>>(obj: T) {
-      const newObj: T = {} as T;
-      for (const key in obj) {
-        newObj[key] = obj[key];
-      }
-      return newObj;
+    function clonePlainObject<T extends object>(obj: T): T {
+      return JSON.parse(JSON.stringify(obj));
     }
     const lrc = new Lrc();
     lrc.info = clonePlainObject(this.info);
-    lrc.lyrics = this.lyrics.reduce(
-      (ret, lyric) => {
-        ret.push(clonePlainObject(lyric));
-        return ret;
-      },
-      [] as Lyric[],
-    );
+    lrc.lyrics = clonePlainObject(this.lyrics);
     return lrc;
   }
 
@@ -122,35 +115,33 @@ export class Lrc {
    * @param opts.sort lyrics sort by timestamp
    * @param opts.lineFormat newline format
    */
-  toString(opts: Partial<ToStringOptions> = {}) {
-    opts.combine = 'combine' in opts ? opts.combine : true;
-    opts.lineFormat = 'lineFormat' in opts ? opts.lineFormat : '\r\n';
-    opts.sort = 'sort' in opts ? opts.sort : true;
-
-    const lines: string[] = [],
-      lyricsMap: Record<string, [[number], string]> = {},
-      lyricsList: CombineLyric[] = [];
+  toString({
+    combine = true,
+    lineFormat = '\r\n',
+    sort = true,
+  }: Partial<ToStringOptions> = {}) {
+    const lines: string[] = [];
 
     // generate info
     for (const key in this.info) {
       lines.push(`[${key}:${this.info[key]}]`);
     }
 
-    if (opts.combine) {
+    if (combine) {
+      const lyricsMap: Record<string, [number[], string]> = {};
+      const lyricsList: CombineLyric[] = [];
+
       // uniqueness
-      this.lyrics.forEach((lyric) => {
-        if (lyric.content in lyricsMap) {
-          lyricsMap[lyric.content][0].push(lyric.timestamp);
+      for (const lyric of this.lyrics) {
+        if (lyric.rawContent in lyricsMap) {
+          lyricsMap[lyric.rawContent][0].push(lyric.timestamp);
         } else {
-          lyricsMap[lyric.content] = [[lyric.timestamp], lyric.rawContent!];
+          lyricsMap[lyric.rawContent] = [[lyric.timestamp], lyric.rawContent];
         }
-      });
+      }
 
       // sorted
       for (var content in lyricsMap) {
-        if (opts.sort) {
-          lyricsMap[content].sort();
-        }
         lyricsList.push({
           timestamps: lyricsMap[content][0],
           rawContent: lyricsMap[content][1],
@@ -158,26 +149,26 @@ export class Lrc {
         });
       }
 
-      if (opts.sort) {
+      if (sort) {
         lyricsList.sort((a, b) => a.timestamps[0] - b.timestamps[0]);
       }
 
       // generate lyrics
-      lyricsList.forEach((lyric) => {
+      for (const lyric of lyricsList) {
         lines.push(
           `[${lyric.timestamps
             .map((timestamp) => timestampToString(timestamp))
             .join('][')}]${lyric.rawContent || ''}`,
         );
-      });
+      }
     } else {
-      this.lyrics.forEach((lyric) => {
+      for (const lyric of this.lyrics) {
         lines.push(
           `[${timestampToString(lyric.timestamp)}]${lyric.content || ''}`,
         );
-      });
+      }
     }
 
-    return lines.join(opts.lineFormat);
+    return lines.join(lineFormat);
   }
 }

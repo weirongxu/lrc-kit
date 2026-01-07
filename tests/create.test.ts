@@ -2,6 +2,12 @@ import { Lrc, timestampToString } from '../src/lrc-kit';
 
 let lrc: Lrc;
 
+const makeLyric = (timestamp: number, content: string) => ({
+  timestamp,
+  content,
+  rawContent: content,
+});
+
 beforeEach(() => {
   lrc = new Lrc();
 });
@@ -17,12 +23,7 @@ describe('modify lyrics', () => {
   // set lyrics
   lrc.info['re'] = 'raidou';
   lrc.info['ve'] = '1.00';
-  lrc.lyrics = [
-    {
-      timestamp: 15.05,
-      content: 'test',
-    },
-  ];
+  lrc.lyrics = [makeLyric(15.05, 'test')];
   expect(lrc.toString()).toEqual(
     ['[re:raidou]', '[ve:1.00]', `[${timestampToString(15.05)}]test`].join(
       '\r\n',
@@ -30,10 +31,7 @@ describe('modify lyrics', () => {
   );
 
   // append lyric
-  lrc.lyrics.push({
-    timestamp: 19.21,
-    content: 'test2',
-  });
+  lrc.lyrics.push(makeLyric(19.21, 'test2'));
   expect(lrc.toString()).toEqual(
     [
       '[re:raidou]',
@@ -44,10 +42,7 @@ describe('modify lyrics', () => {
   );
 
   // prepend lyrics
-  lrc.lyrics.splice(0, 0, {
-    timestamp: 13.13,
-    content: 'test3',
-  });
+  lrc.lyrics.splice(0, 0, makeLyric(13.13, 'test3'));
   expect(lrc.toString()).toEqual(
     [
       '[re:raidou]',
@@ -59,10 +54,7 @@ describe('modify lyrics', () => {
   );
 
   // insertBefore lyrics
-  lrc.lyrics.splice(0, 0, {
-    timestamp: 10.23,
-    content: 'insertBefore',
-  });
+  lrc.lyrics.splice(0, 0, makeLyric(10.23, 'insertBefore'));
   expect(lrc.toString()).toEqual(
     [
       '[re:raidou]',
@@ -75,10 +67,7 @@ describe('modify lyrics', () => {
   );
 
   // insertAfter lyrics
-  lrc.lyrics.splice(1, 0, {
-    timestamp: 12.23,
-    content: 'insertAfter',
-  });
+  lrc.lyrics.splice(1, 0, makeLyric(12.23, 'insertAfter'));
   expect(lrc.toString()).toEqual(
     [
       '[re:raidou]',
@@ -92,12 +81,7 @@ describe('modify lyrics', () => {
   );
 
   // reset lyrics
-  lrc.lyrics = [
-    {
-      timestamp: 15.05,
-      content: 'test',
-    },
-  ];
+  lrc.lyrics = [makeLyric(15.05, 'test')];
   expect(lrc.toString()).toEqual(
     ['[re:raidou]', '[ve:1.00]', `[${timestampToString(15.05)}]test`].join(
       '\r\n',
@@ -106,16 +90,7 @@ describe('modify lyrics', () => {
 });
 
 test('should sort', () => {
-  lrc.lyrics = [
-    {
-      timestamp: 16.05,
-      content: 'test2',
-    },
-    {
-      timestamp: 15.05,
-      content: 'test',
-    },
-  ];
+  lrc.lyrics = [makeLyric(16.05, 'test2'), makeLyric(15.05, 'test')];
   expect(lrc.toString({ sort: false })).toEqual(
     [
       `[${timestampToString(16.05)}]test2`,
@@ -131,16 +106,7 @@ test('should sort', () => {
 });
 
 test('should combine time', () => {
-  lrc.lyrics = [
-    {
-      timestamp: 15.05,
-      content: 'test',
-    },
-    {
-      timestamp: 16.05,
-      content: 'test',
-    },
-  ];
+  lrc.lyrics = [makeLyric(15.05, 'test'), makeLyric(16.05, 'test')];
   expect(lrc.toString({ combine: false })).toEqual(
     [
       `[${timestampToString(15.05)}]test`,
@@ -155,12 +121,7 @@ test('should combine time', () => {
 });
 
 test('should offset time', () => {
-  lrc.lyrics = [
-    {
-      timestamp: 15.05,
-      content: 'test',
-    },
-  ];
+  lrc.lyrics = [makeLyric(15.05, 'test')];
   lrc.offset(1);
   expect(lrc.toString()).toEqual(
     [`[${timestampToString(16.05)}]test`].join('\r\n'),
@@ -177,7 +138,7 @@ test('should clone', () => {
   expect(newLrc.info).not.toBe(lrc.info);
   expect(newLrc.lyrics).toEqual(lrc.lyrics);
   expect(newLrc.lyrics).not.toBe(lrc.lyrics);
-  newLrc.lyrics.forEach(function(lyric, index) {
+  for (const [index, lyric] of newLrc.lyrics.entries()) {
     expect(lyric).not.toBe(lrc.lyrics[index]);
-  });
+  }
 });

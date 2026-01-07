@@ -2,9 +2,15 @@
   "compilerOptions": {
     "declaration": true,
     "esModuleInterop": true,
+    "target": "es2015",
+    "lib": [
+      "es2019"
+    ],
     "strict": true,
     "skipLibCheck": true,
     "outDir": "lib"
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

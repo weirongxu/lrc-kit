@@ -24,3 +24,16 @@ copy line
 
 [00:32.260]why can't I get out of my own way
 `;
+
+export const enhancedLrcFoobar2000Text = `[ar:Enhanced Artist]
+[ti:Enhanced Format]
+[00:05.000] hello [00:06.000] world
+[00:09.250] feel [00:10.500] the [00:11.750] rhythm [00:13.000] rise
+[00:15.500] deeper hook
+`;
+
+export const enhancedLrcA2Text = `[ar:Enhanced A2]
+[ti:A2 Format]
+[00:02.000] <00:02.500> spark <00:03.000> light
+[00:04.000] <00:04.500> flow <00:05.000> onward
+`;
