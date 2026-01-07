@@ -16,7 +16,7 @@ export interface CombineLyric {
 export type Info = Record<string, string>;
 
 export function padZero(num: number | string, size: number = 2): string {
-  while (num.toString().split('.')[0].length < size) num = '0' + num;
+  while (num.toString().split('.')[0].length < size) num = `0${num}`;
   return num as string;
 }
 
@@ -70,7 +70,7 @@ export class Lrc {
         case LineType.TIME:
           for (const timestamp of line.timestamps) {
             lyrics.push({
-              timestamp: timestamp,
+              timestamp,
               wordTimestamps: line.wordTimestamps,
               rawContent: line.rawContent,
               content: line.content,
@@ -83,7 +83,7 @@ export class Lrc {
           break;
       }
     }
-    var lrc = new this();
+    const lrc = new this();
     lrc.lyrics = lyrics;
     lrc.info = info;
     lrc.plain = plain;
@@ -123,8 +123,8 @@ export class Lrc {
     const lines: string[] = [];
 
     // generate info
-    for (const key in this.info) {
-      lines.push(`[${key}:${this.info[key]}]`);
+    for (const [key, value] of Object.entries(this.info)) {
+      lines.push(`[${key}:${value}]`);
     }
 
     if (combine) {
@@ -141,11 +141,11 @@ export class Lrc {
       }
 
       // sorted
-      for (var content in lyricsMap) {
+      for (const [content, value] of Object.entries(lyricsMap)) {
         lyricsList.push({
-          timestamps: lyricsMap[content][0],
-          rawContent: lyricsMap[content][1],
-          content: content,
+          timestamps: value[0],
+          rawContent: value[1],
+          content,
         });
       }
 

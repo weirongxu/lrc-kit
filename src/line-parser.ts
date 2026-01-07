@@ -7,11 +7,10 @@ export const SQUARE_TAGS_REGEXP = /^(?:\s*\[[^\]]+\])+/;
 export const INFO_REGEXP = /^\s*(\w+)\s*:(.*)$/;
 
 // match `512:34.1`
-export const TIME_REGEXP = /^\s*(\d+)\s*:\s*(\d+(\s*[\.:]\s*\d+)?)\s*$/;
+export const TIME_REGEXP = /^\s*(\d+)\s*:\s*(\d+(\s*[.:]\s*\d+)?)\s*$/;
 
 // match `<12:30.1> word` (A2 extension) | `[12:30.1] word` (Foobar2000)
-export const ENHANCED_TAG_WORD_REGEXP =
-  /[<\[](\d+:\d+(?:\.\d+)?)[>\]]([^\[<]*)/;
+export const ENHANCED_TAG_WORD_REGEXP = /[<[](\d+:\d+(?:\.\d+)?)[>\]]([^[<]*)/;
 
 export enum LineType {
   INVALID = 'INVALID',
@@ -101,7 +100,7 @@ export function parseEnhancedWords(
       stripIndex += wordMatches.index + wordMatches[0].length;
       const timestamp = parseTimestamp(wordMatches[1]);
       if (timestamp === null) continue;
-      let wordContent = wordMatches[2];
+      const wordContent = wordMatches[2];
       pushContent(timestamp, wordContent);
     }
 
@@ -131,7 +130,7 @@ export function parseTime(
 
   return {
     type: LineType.TIME,
-    timestamps: timestamps,
+    timestamps,
     rawContent,
     content: rawContent,
   };
@@ -185,7 +184,7 @@ export function parseLine(
     return {
       type: LineType.INVALID,
     };
-  } catch (_e) {
+  } catch {
     return {
       type: LineType.INVALID,
     };

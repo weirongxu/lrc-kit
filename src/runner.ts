@@ -78,7 +78,7 @@ export class Runner {
 
   private _findIndex(timestamp: number): number {
     const nextIndex = this.lrc.lyrics.findIndex(
-      (lyric, i) => lyric.timestamp > timestamp,
+      (lyric) => lyric.timestamp > timestamp,
     );
     if (nextIndex === -1) return this.lrc.lyrics.length - 1;
     return nextIndex - 1;
