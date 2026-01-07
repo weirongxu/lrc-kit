@@ -15,9 +15,8 @@ export interface CombineLyric {
 
 export type Info = Record<string, string>;
 
-export function padZero(num: number | string, size: number = 2): string {
-  while (num.toString().split('.')[0].length < size) num = `0${num}`;
-  return num as string;
+function padStartZero2(num: number | string): string {
+  return num.toString().padStart(2, '0');
 }
 
 /**
@@ -28,9 +27,11 @@ export function padZero(num: number | string, size: number = 2): string {
  * @param timestamp second timestamp
  */
 export function timestampToString(timestamp: number): string {
-  return `${padZero(Math.floor(timestamp / 60))}:${padZero(
-    (timestamp % 60).toFixed(2),
-  )}`;
+  const minutes = Math.floor(timestamp / 60);
+  const secondsFraction = timestamp % 60;
+  const seconds = Math.floor(secondsFraction);
+  const fraction = Math.round((secondsFraction - seconds) * 100);
+  return `${padStartZero2(minutes)}:${padStartZero2(seconds)}.${fraction.toString().padEnd(2, '0')}`;
 }
 
 export type LineFormat = '\r\n' | '\r' | '\n';
@@ -128,20 +129,24 @@ export class Lrc {
     }
 
     if (combine) {
-      const lyricsMap: Record<string, [number[], string]> = {};
+      const lyricsMap: Map<string, [number[], string]> = new Map();
       const lyricsList: CombineLyric[] = [];
 
       // uniqueness
       for (const lyric of this.lyrics) {
-        if (lyric.rawContent in lyricsMap) {
-          lyricsMap[lyric.rawContent][0].push(lyric.timestamp);
+        const existLyric = lyricsMap.get(lyric.rawContent);
+        if (existLyric) {
+          existLyric[0].push(lyric.timestamp);
         } else {
-          lyricsMap[lyric.rawContent] = [[lyric.timestamp], lyric.rawContent];
+          lyricsMap.set(lyric.rawContent, [
+            [lyric.timestamp],
+            lyric.rawContent,
+          ]);
         }
       }
 
       // sorted
-      for (const [content, value] of Object.entries(lyricsMap)) {
+      for (const [content, value] of lyricsMap.entries()) {
         lyricsList.push({
           timestamps: value[0],
           rawContent: value[1],
@@ -150,7 +155,9 @@ export class Lrc {
       }
 
       if (sort) {
-        lyricsList.sort((a, b) => a.timestamps[0] - b.timestamps[0]);
+        lyricsList.sort(
+          (a, b) => (a.timestamps[0] ?? 0) - (b.timestamps[0] ?? 0),
+        );
       }
 
       // generate lyrics

@@ -128,8 +128,8 @@ parse lyirc text and return a lrc object
 
 **Lrc methods**
 
--   **lrc.info**
-    lyric info plain object
+- **lrc.info**
+  lyric info plain object
 
 ```json
 {
@@ -145,8 +145,8 @@ parse lyirc text and return a lrc object
 }
 ```
 
--   **lrc.lyrics**
-    lyric array
+- **lrc.lyrics**
+  lyric array
 
 ```json
 [
@@ -173,14 +173,14 @@ parse lyirc text and return a lrc object
 ]
 ```
 
--   **lrc.offset(offset)**
-    offset all lyrics
+- **lrc.offset(offset)**
+  offset all lyrics
 
--   **lrc.toString(options)**
-    generate lyric string
-    -   options.combine (boolean) lyrics combine by same content
-    -   options.sort (boolean) lyrics sort by timestamp
-    -   options.lineFormat (string) newline format
+- **lrc.toString(options)**
+  generate lyric string
+    - options.combine (boolean) lyrics combine by same content
+    - options.sort (boolean) lyrics sort by timestamp
+    - options.lineFormat (string) newline format
 
 ## Runner
 
@@ -232,19 +232,19 @@ runner.lrcUpdate(); // Must call lrcUpdate() when update lyrics
 
 **new Runner(lrc = new Lrc(), offset=true)**
 
--   `lrc` lrc object
--   `offset` parse lrc.info.offset if offset is true
+- `lrc` lrc object
+- `offset` parse lrc.info.offset if offset is true
 
 **Runner methods**
 
--   **runner.setLrc(lrc)** reset the lrc object
--   **runner.lrcUpdate()** call it when lrc updated
--   **runner.timeUpdate(timestamp)** time update
--   **runner.getInfo()** get `runner.lrc.info`
--   **runner.getLyrics()** get `runner.lrc.lyrics`
--   **runner.curIndex()** current index
--   **runner.curWordIndexes()** current word indexes, including character index
--   **runner.curLyric()** current lyric
+- **runner.setLrc(lrc)** reset the lrc object
+- **runner.lrcUpdate()** call it when lrc updated
+- **runner.timeUpdate(timestamp)** time update
+- **runner.getInfo()** get `runner.lrc.info`
+- **runner.getLyrics()** get `runner.lrc.lyrics`
+- **runner.curIndex()** current index
+- **runner.curWordIndexes()** current word indexes, including character index
+- **runner.curLyric()** current lyric
 
 ## License
 

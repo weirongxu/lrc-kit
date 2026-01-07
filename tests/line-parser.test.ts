@@ -1,7 +1,12 @@
-import { parseLine, LineType, InfoLine, TimeLine } from '../src/line-parser';
+import {
+  parseLine,
+  LineType,
+  type InfoLine,
+  type TimeLine,
+} from '../src/line-parser';
 
 test('get info type', () => {
-  var lp = parseLine('[ti: Song title]');
+  const lp = parseLine('[ti: Song title]');
   expect(lp.type).toEqual(LineType.INFO);
 });
 
@@ -24,55 +29,55 @@ describe('time type', () => {
   });
 
   test('basic', () => {
-    var lp = parseLine('[1:10.10]hello') as TimeLine;
+    const lp = parseLine('[1:10.10]hello') as TimeLine;
     expect(lp.timestamps).toEqual([1 * 60 + 10.1]);
     expect(lp.content).toEqual('hello');
   });
 
   test('use ":" instead of "."', () => {
-    var lp = parseLine('[1:10:10]hello') as TimeLine;
+    const lp = parseLine('[1:10:10]hello') as TimeLine;
     expect(lp.timestamps).toEqual([1 * 60 + 10.1]);
     expect(lp.content).toEqual('hello');
   });
 
   test('content tirm', () => {
-    var lp = parseLine('[1:10.10] hello ') as TimeLine;
+    const lp = parseLine('[1:10.10] hello ') as TimeLine;
     expect(lp.timestamps).toEqual([1 * 60 + 10.1]);
     expect(lp.content).toEqual('hello');
   });
 
   test('time tirm1', () => {
-    var lp = parseLine('[ 1 : 10 . 10 ] hello ') as TimeLine;
+    const lp = parseLine('[ 1 : 10 . 10 ] hello ') as TimeLine;
     expect(lp.timestamps).toEqual([1 * 60 + 10.1]);
     expect(lp.content).toEqual('hello');
   });
 
   test('prefix 0', () => {
-    var lp = parseLine('[01:010.010] hello ') as TimeLine;
+    const lp = parseLine('[01:010.010] hello ') as TimeLine;
     expect(lp.timestamps).toEqual([1 * 60 + 10.01]);
     expect(lp.content).toEqual('hello');
   });
 
   test('prefix space', () => {
-    var lp = parseLine('  [1:00] hello') as TimeLine;
+    const lp = parseLine('  [1:00] hello') as TimeLine;
     expect(lp.timestamps).toEqual([1 * 60]);
     expect(lp.content).toEqual('hello');
   });
 
   test('two timestamps', () => {
-    var lp = parseLine(' [1 : 00 ][ 2: 00] hello') as TimeLine;
+    const lp = parseLine(' [1 : 00 ][ 2: 00] hello') as TimeLine;
     expect(lp.timestamps).toEqual([1 * 60, 2 * 60]);
     expect(lp.content).toEqual('hello');
   });
 
   test('three timestamps', () => {
-    var lp = parseLine(' [1:00 ]  [  2:00] [ 3:01 ]  hello') as TimeLine;
+    const lp = parseLine(' [1:00 ]  [  2:00] [ 3:01 ]  hello') as TimeLine;
     expect(lp.timestamps).toEqual([1 * 60, 2 * 60, 3 * 60 + 1]);
     expect(lp.content).toEqual('hello');
   });
 
   test('with options', () => {
-    var lp = parseLine(' [1:00 ]  [  2:00] [ 3:01 ]  hello', {
+    const lp = parseLine(' [1:00 ]  [  2:00] [ 3:01 ]  hello', {
       enhanced: false,
     }) as TimeLine;
     expect(lp.timestamps).toEqual([1 * 60, 2 * 60, 3 * 60 + 1]);

@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "verbatimModuleSyntax": false,
+    "outDir": "lib/esm",
+  },
+  "include": [
+    "src",
+  ],
+}

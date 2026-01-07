@@ -46,9 +46,7 @@ export function parseSquareTags(
 ): null | { tags: string[]; rawContent: string } {
   line = line.trim();
   const matches = SQUARE_TAGS_REGEXP.exec(line);
-  if (matches === null) {
-    return null;
-  }
+  if (matches === null) return null;
   const tag = matches[0];
   const content = line.slice(tag.length);
   return {
@@ -60,8 +58,10 @@ export function parseSquareTags(
 function parseTimestamp(str: string): number | null {
   const matches = TIME_REGEXP.exec(str);
   if (!matches) return null;
-  const minutes = parseFloat(matches[1]);
-  const seconds = parseFloat(matches[2].replace(/\s+/g, '').replace(':', '.'));
+  const minuteStr = matches[1] ?? '0';
+  const secondStr = matches[2] ?? '0';
+  const minutes = parseFloat(minuteStr);
+  const seconds = parseFloat(secondStr.replace(/\s+/g, '').replace(':', '.'));
   return minutes * 60 + seconds;
 }
 
@@ -84,8 +84,9 @@ export function parseEnhancedWords(
     });
   };
 
-  const firstMatches = ENHANCED_TAG_WORD_REGEXP.exec(rawContent);
   const firstTimestamp = timestamps[timestamps.length - 1];
+  if (!firstTimestamp) return null;
+  const firstMatches = ENHANCED_TAG_WORD_REGEXP.exec(rawContent);
   const firstContent = firstMatches
     ? rawContent.slice(0, firstMatches.index)
     : rawContent;
@@ -98,9 +99,9 @@ export function parseEnhancedWords(
       );
       if (!wordMatches) break;
       stripIndex += wordMatches.index + wordMatches[0].length;
-      const timestamp = parseTimestamp(wordMatches[1]);
+      const timestamp = parseTimestamp(wordMatches[1]!);
       if (timestamp === null) continue;
-      const wordContent = wordMatches[2];
+      const wordContent = wordMatches[2]!;
       pushContent(timestamp, wordContent);
     }
 
@@ -136,14 +137,33 @@ export function parseTime(
   };
 }
 
-export function parseInfo(tag: string): InfoLine {
-  const matches = INFO_REGEXP.exec(tag)!;
+export function parseInfo(tag: string): InfoLine | null {
+  const matches = INFO_REGEXP.exec(tag);
+  if (!matches) return null;
+  const key = matches[1] ?? '';
+  const value = matches[2] ?? '';
   return {
     type: LineType.INFO,
-    key: matches[1].trim(),
-    value: matches[2].trim(),
+    key: key.trim(),
+    value: value.trim(),
   };
 }
+
+const parseLineInner = (
+  line: string,
+  options?: ParseOptions,
+): InfoLine | TimeLine | null => {
+  const parsedTags = parseSquareTags(line);
+  if (!parsedTags) return null;
+  const { tags, rawContent } = parsedTags;
+  const firstTag = tags[0];
+  if (!firstTag) return null;
+  if (TIME_REGEXP.test(firstTag)) {
+    return parseTime(tags, rawContent, options);
+  } else {
+    return parseInfo(firstTag);
+  }
+};
 
 /**
  * line parse lrc of timestamp
@@ -171,22 +191,10 @@ export function parseLine(
   line: string,
   options?: ParseOptions,
 ): InfoLine | TimeLine | InvalidLine {
-  const parsedTags = parseSquareTags(line);
-  try {
-    if (parsedTags) {
-      const { tags, rawContent } = parsedTags;
-      if (TIME_REGEXP.test(tags[0])) {
-        return parseTime(tags, rawContent, options);
-      } else {
-        return parseInfo(tags[0]);
-      }
-    }
-    return {
-      type: LineType.INVALID,
-    };
-  } catch {
-    return {
-      type: LineType.INVALID,
-    };
-  }
+  const result = parseLineInner(line, options);
+  return result
+    ? result
+    : {
+        type: LineType.INVALID,
+      };
 }

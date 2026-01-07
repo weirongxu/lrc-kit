@@ -1,5 +1,6 @@
 import { Lrc, Runner } from '../src/lrc-kit';
 import { enhancedLrcFoobar2000Text, lrcText } from './fixtures';
+import { ensureLyric } from './util';
 
 let lrc: Lrc;
 let runner: Runner;
@@ -19,11 +20,13 @@ test('should get all lyrics', function () {
 
 test('first get lyric', function () {
   expect(runner.curIndex()).toEqual(-1);
-  expect(runner.getLyric()).toEqual(lrc.lyrics[0]);
+  const firstLyric = ensureLyric(lrc.lyrics, 0);
+  expect(runner.getLyric()).toEqual(firstLyric);
 });
 
 test('index should be 0 when before 2nd lyric', function () {
-  runner.timeUpdate(lrc.lyrics[1].timestamp - 0.1);
+  const secondLyric = ensureLyric(lrc.lyrics, 1);
+  runner.timeUpdate(secondLyric.timestamp - 0.1);
   expect(runner.curIndex()).toEqual(0);
 });
 
@@ -38,22 +41,26 @@ test('index should be -1 when timestamp is 0', function () {
 });
 
 test('index should be 1 when in 1st lyric', function () {
-  runner.timeUpdate(lrc.lyrics[1].timestamp);
+  const secondLyric = ensureLyric(lrc.lyrics, 1);
+  runner.timeUpdate(secondLyric.timestamp);
   expect(runner.curIndex()).toEqual(1);
 });
 
 test('index should be 2 when after 3rd lyric', function () {
-  runner.timeUpdate(lrc.lyrics[2].timestamp + 0.1);
+  const thirdLyric = ensureLyric(lrc.lyrics, 2);
+  runner.timeUpdate(thirdLyric.timestamp + 0.1);
   expect(runner.curIndex()).toEqual(2);
 });
 
 test('index should be 3 when before 5th lyric', function () {
-  runner.timeUpdate(lrc.lyrics[4].timestamp - 0.1);
+  const fifthLyric = ensureLyric(lrc.lyrics, 4);
+  runner.timeUpdate(fifthLyric.timestamp - 0.1);
   expect(runner.curIndex()).toEqual(3);
 });
 
 test('index should be 4 when after 5th lyric', function () {
-  runner.timeUpdate(lrc.lyrics[4].timestamp + 0.1);
+  const fifthLyric = ensureLyric(lrc.lyrics, 4);
+  runner.timeUpdate(fifthLyric.timestamp + 0.1);
   expect(runner.curIndex()).toEqual(4);
 });
 
@@ -121,13 +128,16 @@ test('should expose enhanced word bounds', () => {
     charStartIndex: number;
     charEndIndex: number;
   } | null;
-  let content: string;
+  let content: string | undefined;
   const getCurWord = () =>
-    content.slice(curWordIndexes?.charStartIndex, curWordIndexes?.charEndIndex);
+    content?.slice(
+      curWordIndexes?.charStartIndex,
+      curWordIndexes?.charEndIndex,
+    );
 
   curIndex = runner.curIndex();
   curWordIndexes = runner.curWordIndexes();
-  content = runner.getLyric().content;
+  content = runner.getLyric()?.content;
   expect(curIndex).toEqual(0);
   expect(curWordIndexes).toEqual({
     wordIndex: 0,
@@ -140,7 +150,7 @@ test('should expose enhanced word bounds', () => {
   runner.timeUpdate(6.5);
   curIndex = runner.curIndex();
   curWordIndexes = runner.curWordIndexes();
-  content = runner.getLyric().content;
+  content = runner.getLyric()?.content;
   expect(curIndex).toEqual(0);
   expect(curWordIndexes).toEqual({
     wordIndex: 1,
@@ -153,7 +163,7 @@ test('should expose enhanced word bounds', () => {
   runner.timeUpdate(10.7);
   curIndex = runner.curIndex();
   curWordIndexes = runner.curWordIndexes();
-  content = runner.getLyric().content;
+  content = runner.getLyric()?.content;
   expect(curIndex).toEqual(1);
   expect(curWordIndexes).toEqual({
     wordIndex: 1,
@@ -166,7 +176,7 @@ test('should expose enhanced word bounds', () => {
   runner.timeUpdate(15.6);
   curIndex = runner.curIndex();
   curWordIndexes = runner.curWordIndexes();
-  content = runner.getLyric().content;
+  content = runner.getLyric()?.content;
   expect(curIndex).toEqual(2);
   expect(curWordIndexes).toEqual({
     wordIndex: 0,

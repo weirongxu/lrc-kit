@@ -1,19 +1,19 @@
-import { Lrc, Lyric } from './lrc';
+import { Lrc, type Lyric } from './lrc';
 
 export class Runner {
   readonly offset: boolean;
-  private _currentIndex: number;
-  private _currentWordPartIndex: number;
   private _lrc: Lrc;
-  private _currentWordStartIndex: number;
-  private _currentWordEndIndex: number;
+  private _currentIndex: number;
+  private _currentWordIndexes: {
+    wordIndex: number;
+    charStartIndex: number;
+    charEndIndex: number;
+  } | null;
 
   constructor(lrc: Lrc = new Lrc(), offset: boolean = true) {
     this.offset = offset;
     this._currentIndex = -1;
-    this._currentWordPartIndex = -1;
-    this._currentWordStartIndex = -1;
-    this._currentWordEndIndex = -1;
+    this._currentWordIndexes = null;
     this._lrc = lrc.clone();
     this.lrcUpdate();
   }
@@ -51,29 +51,34 @@ export class Runner {
     });
   }
 
+  private timeUpdateAndGetWordIndexes(index: number, timestamp: number) {
+    const words = this.lrc.lyrics[index]?.wordTimestamps;
+    if (!words || words.length === 0) return null;
+    const wordIndex = this._findWordIndex(timestamp, words);
+    if (wordIndex === -1) return null;
+    const aheadWords = words.slice(0, wordIndex + 1);
+    const currentWord = aheadWords[aheadWords.length - 1];
+    if (!currentWord) return null;
+    let charEndIndex = aheadWords.reduce(
+      (sum, word) => sum + word.content.length,
+      0,
+    );
+    let charStartIndex = charEndIndex - currentWord.content.length;
+    if (currentWord.content.startsWith(' ')) charStartIndex += 1;
+    if (currentWord.content.endsWith(' ')) charEndIndex -= 1;
+    return {
+      wordIndex,
+      charStartIndex,
+      charEndIndex,
+    };
+  }
+
   timeUpdate(timestamp: number) {
     this._currentIndex = this._findIndex(timestamp);
-    const words = this.lrc.lyrics[this._currentIndex]?.wordTimestamps;
-    if (words && words.length > 0) {
-      this._currentWordPartIndex = this._findWordIndex(timestamp, words);
-      if (this._currentWordPartIndex !== -1) {
-        const aheadWords = words.slice(0, this._currentWordPartIndex + 1);
-        const currentWord = aheadWords[aheadWords.length - 1];
-        this._currentWordEndIndex = aheadWords.reduce(
-          (sum, word) => sum + word.content.length,
-          0,
-        );
-        this._currentWordStartIndex =
-          this._currentWordEndIndex - currentWord.content.length;
-        if (currentWord.content.startsWith(' '))
-          this._currentWordStartIndex += 1;
-        if (currentWord.content.endsWith(' ')) this._currentWordEndIndex -= 1;
-        return;
-      }
-    }
-    this._currentWordPartIndex = -1;
-    this._currentWordStartIndex = -1;
-    this._currentWordEndIndex = -1;
+    this._currentWordIndexes = this.timeUpdateAndGetWordIndexes(
+      this._currentIndex,
+      timestamp,
+    );
   }
 
   private _findIndex(timestamp: number): number {
@@ -103,7 +108,7 @@ export class Runner {
     return this.lrc.lyrics;
   }
 
-  getLyric(index: number = this.curIndex()): Lyric {
+  getLyric(index: number = this.curIndex()): Lyric | undefined {
     if (index < 0) return this.lrc.lyrics[0];
     if (index > this.lrc.lyrics.length - 1)
       return this.lrc.lyrics[this.lrc.lyrics.length - 1];
@@ -119,12 +124,7 @@ export class Runner {
     charStartIndex: number;
     charEndIndex: number;
   } | null {
-    if (this._currentWordPartIndex === -1) return null;
-    return {
-      wordIndex: this._currentWordPartIndex,
-      charStartIndex: this._currentWordStartIndex,
-      charEndIndex: this._currentWordEndIndex,
-    };
+    return this._currentWordIndexes;
   }
 
   curLyric() {

@@ -4,6 +4,7 @@ import {
   enhancedLrcFoobar2000Text,
   lrcText,
 } from './fixtures';
+import { ensureLyric } from './util';
 
 test('parse lyric', () => {
   const l = Lrc.parse(lrcText, { enhanced: false });
@@ -69,7 +70,7 @@ test('parse enhanced foobar2000 format lyric', () => {
 
   expect(l.info.ti).toBe('Enhanced Format');
 
-  const [lyric] = l.lyrics;
+  const lyric = ensureLyric(l.lyrics, 0);
   expect(lyric.timestamp).toBe(5);
   expect(lyric.content).toBe('hello world');
   expect(lyric.rawContent).toBe('hello [00:06.000] world');
@@ -78,7 +79,8 @@ test('parse enhanced foobar2000 format lyric', () => {
     { timestamp: 6, content: 'world' },
   ]);
 
-  const [, secondLyric, thirdLyric] = l.lyrics;
+  const secondLyric = ensureLyric(l.lyrics, 1);
+  const thirdLyric = ensureLyric(l.lyrics, 2);
   expect(l.lyrics).toHaveLength(3);
   expect(secondLyric.content).toBe('feel the rhythm rise');
   const secondWordTimestamps = secondLyric.wordTimestamps ?? [];
@@ -103,7 +105,8 @@ test('parse enhanced A2 format lyric', () => {
   expect(l.info.ti).toBe('A2 Format');
   expect(l.lyrics).toHaveLength(2);
 
-  const [firstLyric, secondLyric] = l.lyrics;
+  const firstLyric = ensureLyric(l.lyrics, 0);
+  const secondLyric = ensureLyric(l.lyrics, 1);
   expect(firstLyric.timestamp).toBe(2);
   expect(firstLyric.content).toBe('spark light');
   const firstWordTimestamps = firstLyric.wordTimestamps ?? [];

@@ -2,15 +2,18 @@
   "compilerOptions": {
     "declaration": true,
     "esModuleInterop": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "target": "es2015",
-    "lib": [
-      "es2019"
-    ],
+    "outDir": "lib",
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
-    "outDir": "lib"
+    "allowJs": true
   },
   "include": [
+    ".",
     "src",
     "tests"
   ]
