@@ -65,6 +65,9 @@ export class Runner {
         );
         this._currentWordStartIndex =
           this._currentWordEndIndex - currentWord.content.length;
+        if (currentWord.content.startsWith(' '))
+          this._currentWordStartIndex += 1;
+        if (currentWord.content.endsWith(' ')) this._currentWordEndIndex -= 1;
         return;
       }
     }

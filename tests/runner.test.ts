@@ -19,7 +19,7 @@ test('should get all lyrics', function () {
 
 test('first get lyric', function () {
   expect(runner.curIndex()).toEqual(-1);
-  expect(() => runner.getLyric()).toThrow('Index not exist');
+  expect(runner.getLyric()).toEqual(lrc.lyrics[0]);
 });
 
 test('index should be 0 when before 2nd lyric', function () {
@@ -121,47 +121,58 @@ test('should expose enhanced word bounds', () => {
     charStartIndex: number;
     charEndIndex: number;
   } | null;
+  let content: string;
+  const getCurWord = () =>
+    content.slice(curWordIndexes?.charStartIndex, curWordIndexes?.charEndIndex);
 
   curIndex = runner.curIndex();
   curWordIndexes = runner.curWordIndexes();
+  content = runner.getLyric().content;
   expect(curIndex).toEqual(0);
   expect(curWordIndexes).toEqual({
     wordIndex: 0,
     charStartIndex: 0,
-    charEndIndex: 6,
+    charEndIndex: 5,
   });
-  expect(runner.getLyric().content).toEqual('hello world');
+  expect(content).toEqual('hello world');
+  expect(getCurWord()).toEqual('hello');
 
   runner.timeUpdate(6.5);
   curIndex = runner.curIndex();
   curWordIndexes = runner.curWordIndexes();
+  content = runner.getLyric().content;
   expect(curIndex).toEqual(0);
   expect(curWordIndexes).toEqual({
     wordIndex: 1,
     charStartIndex: 6,
     charEndIndex: 11,
   });
-  expect(runner.getLyric().content).toEqual('hello world');
+  expect(content).toEqual('hello world');
+  expect(getCurWord()).toEqual('world');
 
   runner.timeUpdate(10.7);
   curIndex = runner.curIndex();
   curWordIndexes = runner.curWordIndexes();
+  content = runner.getLyric().content;
   expect(curIndex).toEqual(1);
   expect(curWordIndexes).toEqual({
     wordIndex: 1,
     charStartIndex: 5,
-    charEndIndex: 9,
+    charEndIndex: 8,
   });
-  expect(runner.getLyric().content).toEqual('feel the rhythm rise');
+  expect(content).toEqual('feel the rhythm rise');
+  expect(getCurWord()).toEqual('the');
 
   runner.timeUpdate(15.6);
   curIndex = runner.curIndex();
   curWordIndexes = runner.curWordIndexes();
+  content = runner.getLyric().content;
   expect(curIndex).toEqual(2);
   expect(curWordIndexes).toEqual({
     wordIndex: 0,
     charStartIndex: 0,
     charEndIndex: 11,
   });
-  expect(runner.getLyric().content).toEqual('deeper hook');
+  expect(content).toEqual('deeper hook');
+  expect(getCurWord()).toEqual('deeper hook');
 });
