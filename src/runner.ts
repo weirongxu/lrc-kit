@@ -1,4 +1,4 @@
-import { Lrc } from './lrc';
+import { Lrc, Lyric } from './lrc';
 
 export class Runner {
   readonly offset: boolean;
@@ -100,12 +100,11 @@ export class Runner {
     return this.lrc.lyrics;
   }
 
-  getLyric(index: number = this.curIndex()) {
-    if (index >= 0 && index <= this.lrc.lyrics.length - 1) {
-      return this.lrc.lyrics[index];
-    } else {
-      throw new Error('Index not exist');
-    }
+  getLyric(index: number = this.curIndex()): Lyric {
+    if (index < 0) return this.lrc.lyrics[0];
+    if (index > this.lrc.lyrics.length - 1)
+      return this.lrc.lyrics[this.lrc.lyrics.length - 1];
+    return this.lrc.lyrics[index];
   }
 
   curIndex() {
