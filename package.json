@@ -9,15 +9,14 @@
     "lyric"
   ],
   "scripts": {
-    "build": "yarn run build:esm && yarn run build:cjs",
+    "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p tsconfig.esm.build.json",
     "build:cjs": "tsc -p tsconfig.cjs.build.json",
     "clean": "rm -rf lib",
     "test:types": "tsc -p tsconfig.test.json",
     "test:lint": "eslint src --ext .ts",
     "test:jest": "jest",
-    "test": "npm run test:types && npm run test:lint && npm run test:jest",
-    "prepare": "yarn clean && yarn b uild"
+    "test": "npm run test:types && npm run test:lint && npm run test:jest"
   },
   "files": [
     "lib",
