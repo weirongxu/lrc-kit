@@ -12,6 +12,7 @@
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p tsconfig.esm.build.json",
     "build:cjs": "tsc -p tsconfig.cjs.build.json",
+    "prepublishOnly": "npm run build",
     "clean": "rm -rf lib",
     "test:types": "tsc -p tsconfig.test.json",
     "test:lint": "eslint src --ext .ts",
